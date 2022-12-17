@@ -1,0 +1,36 @@
+version: '3.7'
+
+services:
+  master-service:
+    image: 'master-service:technical-test'
+    build:
+      context: .
+    container_name: master-service
+    depends_on:
+      - some-postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://some-postgres:5432/master
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - 8080:8080
+
+  some-postgres:
+    image: 'postgres:latest'
+    container_name: some-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=master
+    ports:
+      - 5432:5432
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ajipriastomo@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "5050:80"
